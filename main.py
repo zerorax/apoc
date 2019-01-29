@@ -51,16 +51,16 @@ class GameInstance:
     def move_player(self):
         self.poll_input()
         if self.player.k_up:
-            self.player.posy -= 1
+            self.player.posy -= 2
         if self.player.k_down:
-            self.player.posy += 1
+            self.player.posy += 2
         if self.player.k_left:
-            self.player.posx += 1
+            self.player.posx += 2
         if self.player.k_right:
-            self.player.posx -= 1
+            self.player.posx -= 2
 
     def loop(self):
-        self.clock = pygame.time.Clock(60)
+        self.clock = pygame.time.Clock()
         self.poll_input()
         self.move_player()
         self.draw_screen()
