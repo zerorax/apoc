@@ -26,6 +26,7 @@ class Projectile:
         self.rise = rise
         self.run = run
 
+
 class GroundSpace:
     def __init__(self, name, imagefile, buildings=None):
         self.name = name
