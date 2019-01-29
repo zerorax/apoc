@@ -46,10 +46,24 @@ class GameInstance:
                 groundmap.append("grass%d" % randint(1, 3))
             self.groundmap.append(groundmap)
 
-        for x in range(1,100):
-            self.poll_input()
-            self.draw_screen()
-            sleep(0.1)
+        self.draw_screen()
+
+
+    def move_player(self):
+        self.poll_input()
+        if self.player.k_up:
+            self.player.posy -= 1
+        if self.player.k_down:
+            self.player.posy += 1
+        if self.player.k_left:
+            self.player.posx += 1
+        if self.player.k_right:
+            self.player.posx -= 1
+
+    def loop(self):
+        self.poll_input()
+        self.move_player()
+        self.draw_screen()
 
     def draw_screen(self):
         self.draw_ground()
@@ -106,4 +120,6 @@ class Player:
 
 
 instance = GameInstance()
+while 1:
+    instance.loop()
 pygame.quit()
