@@ -60,7 +60,7 @@ class GameInstance:
             self.player.posx -= 1
 
     def loop(self):
-        self.clock = pygame.time.Clock()
+        self.clock = pygame.time.Clock(60)
         self.poll_input()
         self.move_player()
         self.draw_screen()
