@@ -35,7 +35,7 @@ class GameInstance:
         else:
             print("pygame submodules loaded")
 
-        Display.set_mode((640,480), flags=pygame.FULLSCREEN | pygame.HWSURFACE)
+        Display.set_mode((640,480), flags=pygame.FULLSCREEN | pygame.HWSURFACE | pygame.DOUBLEBUF)
         LoadGround()
         self.surface = Display.get_surface()
         self.groundmap = []
