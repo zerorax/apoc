@@ -14,13 +14,22 @@ ground_buildings = []
 ground_spaces = {}
 ship_image = Image.load(os.path.join("images", "ship.png"))
 bullet_types = {"minigun":1}
+weapons = {"minigun": Projectile(True, "minigun", 8, 6)}
+
+
+class Weapon():
+    def __init__(self, rate, speed):
+        self.bullet_type = bullet_types["minigun"]
+        self.rate = rate
+        self.speed = speed
 
 
 class Projectile():
-    def __init__(self, player, bullettype, speed, posx, posy):
+    def __init__(self, player, bullettype, speed, rate, posx, posy):
         self.player = player
         self.speed = speed
         self.type = bullettype
+        self.rate = rate
         self.posx = posx
         self.posy = posy
 
@@ -59,7 +68,7 @@ class GameInstance:
             self.groundmap.append(groundmap)
         self.draw_screen()
 
-    def move_player(self):
+    def player_step(self):
         if self.player.k_up:
             self.player.posy -= 2
         if self.player.k_down:
@@ -68,11 +77,19 @@ class GameInstance:
             self.player.posx += 2
         if self.player.k_right:
             self.player.posx -= 2
+        if self.player.k_lctrl:
+            self.player_fire()
+
+    def player_fire(self):
+        if self.player.mg_wait > 0:
+            self.player.mg_wait -= 1
+        else:
+            self.player.mg_wait = weapons["minigun"].rate
 
     def loop(self):
         self.clock = pygame.time.Clock()
         self.poll_input()
-        self.move_player()
+        self.player_step()
         self.draw_screen()
         self.clock.tick(60)
 
