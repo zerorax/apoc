@@ -4,6 +4,7 @@ import pygame
 import pygame.display as Display
 import pygame.image as Image
 import pygame.event as Event
+import os
 
 from random import randint
 
@@ -11,9 +12,11 @@ from random import randint
 ground_tiles = ["grass1", "grass2", "grass3"]
 ground_buildings = []
 ground_spaces = {}
-ship_image = Image.load("ship.png")
+ship_image = Image.load(os.path.join("images", "ship.png"))
+bullet_types = {"minigun":1}
 
-class bullet():
+
+class Projectile():
     def __init__(self, player, bullettype, speed, posx, posy):
         self.player = player
         self.speed = speed
@@ -25,7 +28,7 @@ class bullet():
 class GroundSpace:
     def __init__(self, name, imagefile, buildings=None):
         self.name = name
-        self.image = Image.load(imagefile)
+        self.image = Image.load(os.path.join("images",imagefile))
         self.buildings = buildings
         ground_spaces[name] = self
 
@@ -57,7 +60,6 @@ class GameInstance:
         self.draw_screen()
 
     def move_player(self):
-        self.poll_input()
         if self.player.k_up:
             self.player.posy -= 2
         if self.player.k_down:
@@ -125,6 +127,9 @@ class Player:
         self.k_down = False
         self.k_left = False
         self.k_right = False
+        self.k_lctrl = False
+        self.k_lalt = False
+        self.k_space = False
 
 
 instance = GameInstance()
