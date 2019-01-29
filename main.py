@@ -3,6 +3,7 @@
 import pygame
 import pygame.display as Display
 import pygame.image as Image
+import pygame.event as Event
 from time import sleep
 from random import randint
 
@@ -42,10 +43,13 @@ class GameInstance:
         for x in range(16):  # 640/40
             groundmap = []
             for y in range(12):  # 480/40
-                groundmap.append("grass%d" % randint(1,3))
+                groundmap.append("grass%d" % randint(1, 3))
             self.groundmap.append(groundmap)
-        self.draw_screen()
-        sleep(10)
+
+        for x in range(1,100):
+            self.poll_input()
+            self.draw_screen()
+            sleep(0.1)
 
     def draw_screen(self):
         self.draw_ground()
@@ -63,6 +67,30 @@ class GameInstance:
                 self.surface.blit(ground_spaces[self.groundmap[x][y]].image, dest=(x * 40, y * 40))
         Display.flip()
 
+    def poll_input(self):
+        for event in Event.get():
+            if event.type == pygame.QUIT:
+                exit(1)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    exit(0)
+                if event.key == pygame.K_DOWN:
+                    self.player.k_up = True
+                elif event.key == pygame.K_UP:
+                    self.player.k_down = True
+                elif event.key == pygame.K_LEFT:
+                    self.player.k_left = True
+                elif event.key == pygame.K_RIGHT:
+                    self.player.k_right = True
+            elif event.type == pygame.KEYUP:
+                if event.key == pygame.K_DOWN:
+                    self.player.k_up = False
+                elif event.key == pygame.K_UP:
+                    self.player.k_down = False
+                elif event.key == pygame.K_LEFT:
+                    self.player.k_left = False
+                elif event.key == pygame.K_RIGHT:
+                    self.player.k_right = False
 
 class Player:
     def __init__(self, health=80, weapons=[]):
@@ -71,9 +99,10 @@ class Player:
         self.posy = 50
         self.weapon = None
         self.weapons = weapons
-
-    def CheckKeyInput(self):
-        pass
+        self.k_up = False
+        self.k_down = False
+        self.k_left = False
+        self.k_right = False
 
 
 instance = GameInstance()
