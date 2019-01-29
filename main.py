@@ -8,22 +8,23 @@ import os
 from random import randint
 
 
-class Weapon():
+class Weapon:
     def __init__(self, rate, speed, bullet_type):
         self.bullet_type = bullet_types[bullet_type]
         self.rate = rate
         self.speed = speed
 
 
-class Projectile():
-    def __init__(self, player, bullettype, speed, rate, posx, posy):
+class Projectile:
+    def __init__(self, player, bullettype, speed, rate, posx, posy, rise, run):
         self.player = player
         self.speed = speed
         self.type = bullettype
         self.rate = rate
         self.posx = posx
         self.posy = posy
-
+        self.rise = rise
+        self.run = run
 
 class GroundSpace:
     def __init__(self, name, imagefile, buildings=None):
@@ -46,6 +47,7 @@ class GameInstance:
         self.surface = Display.get_surface()
         self.groundmap = []
         self.player = Player()
+        self.projectiles = []
         self.clock = pygame.time.Clock()
         for x in range(16):  # 640/40
             groundmap = []
@@ -119,6 +121,10 @@ class GameInstance:
                 elif event.key == pygame.K_RIGHT:
                     self.player.k_right = False
 
+    def projectile_iter(self):
+        for projectile in self.projectiles:
+            if projectile.diry == "up":
+                projectile.posy += projectile.speed
 
 class Player:
     def __init__(self, health=80, weapons=[]):
@@ -147,6 +153,7 @@ ground_spaces = {}
 ship_image = Image.load(os.path.join("images", "ship.png"))
 bullet_types = {"minigun":1}
 weapon_dict = {"minigun": Weapon(6, 8, "minigun")}
+
 instance = GameInstance()
 while True:
     instance.loop()
