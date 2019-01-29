@@ -5,21 +5,12 @@ import pygame.display as Display
 import pygame.image as Image
 import pygame.event as Event
 import os
-
 from random import randint
 
 
-ground_tiles = ["grass1", "grass2", "grass3"]
-ground_buildings = []
-ground_spaces = {}
-ship_image = Image.load(os.path.join("images", "ship.png"))
-bullet_types = {"minigun":1}
-weapons = {"minigun": Projectile(True, "minigun", 8, 6)}
-
-
 class Weapon():
-    def __init__(self, rate, speed):
-        self.bullet_type = bullet_types["minigun"]
+    def __init__(self, rate, speed, bullet_type):
+        self.bullet_type = bullet_types[bullet_type]
         self.rate = rate
         self.speed = speed
 
@@ -40,11 +31,6 @@ class GroundSpace:
         self.image = Image.load(os.path.join("images",imagefile))
         self.buildings = buildings
         ground_spaces[name] = self
-
-
-def LoadGround():
-    for item in ground_tiles:
-        ground_spaces[item] = GroundSpace(item, "%s.png" % item)
 
 
 class GameInstance:
@@ -133,6 +119,7 @@ class GameInstance:
                 elif event.key == pygame.K_RIGHT:
                     self.player.k_right = False
 
+
 class Player:
     def __init__(self, health=80, weapons=[]):
         self.health = health
@@ -149,6 +136,17 @@ class Player:
         self.k_space = False
 
 
+def LoadGround():
+    for item in ground_tiles:
+        ground_spaces[item] = GroundSpace(item, "%s.png" % item)
+
+
+ground_tiles = ["grass1", "grass2", "grass3"]
+ground_buildings = []
+ground_spaces = {}
+ship_image = Image.load(os.path.join("images", "ship.png"))
+bullet_types = {"minigun":1}
+weapon_dict = {"minigun": Weapon(6, 8, "minigun")}
 instance = GameInstance()
 while True:
     instance.loop()
