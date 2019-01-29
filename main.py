@@ -13,6 +13,14 @@ ground_buildings = []
 ground_spaces = {}
 ship_image = Image.load("ship.png")
 
+class bullet():
+    def __init__(self, player, bullettype, speed, posx, posy):
+        self.player = player
+        self.speed = speed
+        self.type = bullettype
+        self.posx = posx
+        self.posy = posy
+
 
 class GroundSpace:
     def __init__(self, name, imagefile, buildings=None):
@@ -80,7 +88,6 @@ class GameInstance:
         for x in range(16):
             for y in range(12):
                 self.surface.blit(ground_spaces[self.groundmap[x][y]].image, dest=(x * 40, y * 40))
-        Display.flip()
 
     def poll_input(self):
         for event in Event.get():
@@ -121,6 +128,6 @@ class Player:
 
 
 instance = GameInstance()
-while 1:
+while True:
     instance.loop()
 pygame.quit()
