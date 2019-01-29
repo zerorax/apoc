@@ -4,7 +4,7 @@ import pygame
 import pygame.display as Display
 import pygame.image as Image
 import pygame.event as Event
-from time import sleep
+
 from random import randint
 
 
@@ -40,14 +40,13 @@ class GameInstance:
         self.surface = Display.get_surface()
         self.groundmap = []
         self.player = Player()
+        self.clock = pygame.time.Clock()
         for x in range(16):  # 640/40
             groundmap = []
             for y in range(12):  # 480/40
                 groundmap.append("grass%d" % randint(1, 3))
             self.groundmap.append(groundmap)
-
         self.draw_screen()
-
 
     def move_player(self):
         self.poll_input()
@@ -61,9 +60,11 @@ class GameInstance:
             self.player.posx -= 1
 
     def loop(self):
+        self.clock = pygame.time.Clock()
         self.poll_input()
         self.move_player()
         self.draw_screen()
+        self.clock.tick(60)
 
     def draw_screen(self):
         self.draw_ground()
