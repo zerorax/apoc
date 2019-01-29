@@ -124,7 +124,7 @@ class GameInstance:
 
     def projectile_iter(self):
         for projectile in self.projectiles:
-            if projectile.diry == "up":
+            if projectile.diry == 1:
                 projectile.posy += projectile.speed
 
 class Player:
