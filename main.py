@@ -4,6 +4,7 @@ import pygame
 import pygame.display as Display
 import pygame.image as Image
 import pygame.event as Event
+import pygame.draw as Draw
 import os
 from random import randint
 
@@ -87,10 +88,24 @@ class GameInstance:
         self.draw_screen()
         self.clock.tick(60)
 
+    @staticmethod
+    def move_bullets():
+        for bullet in bullets:
+            if bullet.trajectory[0] != 0:
+                bullet.posx +=  bullet.trajectory[0]
+            if bullet.trajectory[1] != 0:
+                bullet.posy += bullet.trajectory[1]
+
     def draw_screen(self):
         self.draw_ground()
         self.draw_player()
         Display.flip()
+
+    def draw_bullets(self):
+        for bullet in bullets:
+            if bullet.type == minigun:
+                Draw.line(self.surface, (255,255,255), (round(bullet.posx), round(bullet.posy-1)),
+                          (round(bullet.posx), round(bullet.posy)))
 
     def draw_player(self):  # 50*60
         x = 640 - self.player.posx - 25
@@ -157,7 +172,7 @@ def get_bullet_traj(xstart,xend, ystart, yend, speed):
     distance = [xend - xstart, yend - ystart]
     norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
     direction = [distance[0] / norm, distance[1] / norm]
-    return([direction[0]*speed, direction[1]*speed])
+    return [direction[0]*speed, direction[1]*speed]
 
 
 ground_tiles = ["grass1", "grass2", "grass3"]
