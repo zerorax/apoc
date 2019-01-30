@@ -34,6 +34,13 @@ class GroundSpace:
         ground_spaces[name] = self
 
 
+class Enemy:
+    def __init__(self, shiptype, posx, posy):
+        self.shiptype = shiptype
+        self.posx = posx
+        self.posy = posy
+
+
 class GameInstance:
     def __init__(self):
         numpass, numfail = pygame.init()
@@ -57,14 +64,34 @@ class GameInstance:
         self.draw_screen()
 
     def player_step(self):
+        if not self.player.k_up and not self.player.k_down:
+            self.player.yaccel = 0
+        if not self.player.k_left and not self.player.k_right:
+            self.player.xaccel = 0
         if self.player.k_up:
-            self.player.posy -= 2
-        if self.player.k_down:
-            self.player.posy += 2
+            if self.player.yaccel <= 8:
+                self.player.posy -= 1
+                self.player.yaccel += 1
+            else:
+                self.player.posy -= 3
+        elif self.player.k_down:
+            if self.player.yaccel <= 8:
+                self.player.posy += 1
+                self.player.yaccel += 1
+            else:
+                self.player.posy += 3
         if self.player.k_left:
-            self.player.posx += 2
+            if self.player.xaccel <= 8:
+                self.player.posx += 1
+                self.player.xaccel += 1
+            else:
+                self.player.posx += 3
         if self.player.k_right:
-            self.player.posx -= 2
+            if self.player.xaccel <= 8:
+                self.player.posx -= 1
+                self.player.xaccel += 1
+            else:
+                self.player.posx -= 3
         if self.player.k_lctrl:
             self.player_fire()
 
@@ -85,9 +112,8 @@ class GameInstance:
     def loop(self):
         self.clock = pygame.time.Clock()
         self.poll_input()
+        self.move_bullets()
         self.player_step()
-        if self.player.k_lctrl == True:
-            self.player_fire()
         self.draw_screen()
         self.clock.tick(60)
 
@@ -106,7 +132,6 @@ class GameInstance:
     def draw_screen(self):
         self.draw_ground()
         self.draw_player()
-        self.move_bullets()
         self.draw_bullets()
         Display.flip()
 
@@ -171,6 +196,8 @@ class Player:
         self.k_lctrl = False
         self.k_lalt = False
         self.k_space = False
+        self.xaccel = 0
+        self.yaccel = 0
 
 
 def LoadGround():
@@ -189,7 +216,7 @@ ground_tiles = ["grass1", "grass2", "grass3"]
 ground_buildings = []
 ground_spaces = {}
 ship_image = Image.load(os.path.join("images", "ship.png"))
-bullet_types = {"minigun":1}
+bullet_types = {"minigun": 1}
 weapon_dict = {"minigun": Weapon(6, 8, "minigun")}
 bullets = []
 
