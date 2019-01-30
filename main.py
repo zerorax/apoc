@@ -95,7 +95,7 @@ class GameInstance:
     def move_bullets():
         for bullet in bullets:
             if bullet.trajectory[0] != 0:
-                bullet.posx +=  bullet.trajectory[0]
+                bullet.posx += bullet.trajectory[0]
             if bullet.trajectory[1] != 0:
                 bullet.posy += bullet.trajectory[1]
             if bullet.posx > 640:
@@ -178,7 +178,7 @@ def LoadGround():
         ground_spaces[item] = GroundSpace(item, "%s.png" % item)
 
 
-def get_bullet_traj(xstart,xend, ystart, yend, speed):
+def get_bullet_traj(xstart, xend, ystart, yend, speed):
     distance = [xend - xstart, yend - ystart]
     norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
     direction = [distance[0] / norm, distance[1] / norm]
