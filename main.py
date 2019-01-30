@@ -104,7 +104,7 @@ class GameInstance:
                     self.player.posx -= 2
                     self.player.xaccel += 1
                 else:
-                    self.player.posx -= 2
+                    self.player.posx -= 1
                     self.player.xaccel += 1
             else:
                 self.player.posx -= 3
