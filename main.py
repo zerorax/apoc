@@ -6,6 +6,7 @@ import pygame.image as Image
 import pygame.event as Event
 import pygame.draw as Draw
 import os
+import math
 from random import randint
 
 
@@ -71,7 +72,7 @@ class GameInstance:
         if self.player.mg_wait > 0:
             self.player.mg_wait -= 1
         else:
-            self.player.mg_wait = weapons["minigun"].rate
+            self.player.mg_wait = weapon_dict["minigun"].rate
             bullets.append(Projectile(True, "minigun", 6, self.player.posx+28,
                                       self.player.posy+20, self.player.posx+25,
                                       self.player.posx+25, self.player.posy+20,
@@ -85,6 +86,8 @@ class GameInstance:
         self.clock = pygame.time.Clock()
         self.poll_input()
         self.player_step()
+        if self.player.k_lctrl == True:
+            self.player_fire()
         self.draw_screen()
         self.clock.tick(60)
 
@@ -95,17 +98,23 @@ class GameInstance:
                 bullet.posx +=  bullet.trajectory[0]
             if bullet.trajectory[1] != 0:
                 bullet.posy += bullet.trajectory[1]
+            if bullet.posx > 640:
+                bullets.remove(bullet)
+            if bullet.posy > 480:
+                bullets.remove(bullet)
 
     def draw_screen(self):
         self.draw_ground()
         self.draw_player()
+        self.move_bullets()
+        self.draw_bullets()
         Display.flip()
 
     def draw_bullets(self):
         for bullet in bullets:
-            if bullet.type == minigun:
-                Draw.line(self.surface, (255,255,255), (round(bullet.posx), round(bullet.posy-1)),
-                          (round(bullet.posx), round(bullet.posy)))
+            if bullet.type == "minigun":
+                Draw.line(self.surface, (255,255,255), (640 - round(bullet.posx), 480 - round(bullet.posy-1)),
+                          (640 - round(bullet.posx), 480 - round(bullet.posy)))
 
     def draw_player(self):  # 50*60
         x = 640 - self.player.posx - 25
@@ -132,6 +141,8 @@ class GameInstance:
                     self.player.k_left = True
                 elif event.key == pygame.K_RIGHT:
                     self.player.k_right = True
+                elif event.key == pygame.K_LCTRL:
+                    self.player.k_lctrl = True
             elif event.type == pygame.KEYUP:
                 if event.key == pygame.K_DOWN:
                     self.player.k_up = False
@@ -141,11 +152,9 @@ class GameInstance:
                     self.player.k_left = False
                 elif event.key == pygame.K_RIGHT:
                     self.player.k_right = False
+                elif event.key == pygame.K_LCTRL:
+                    self.player.k_lctrl = False
 
-    def projectile_iter(self):
-        for projectile in self.projectiles:
-            if projectile.diry == 1:
-                projectile.posy += projectile.speed
 
 class Player:
     def __init__(self, health=80, weapons=[]):
@@ -154,6 +163,7 @@ class Player:
         self.posy = 50
         self.weapon = None
         self.weapons = weapons
+        self.mg_wait = 0
         self.k_up = False
         self.k_down = False
         self.k_left = False
