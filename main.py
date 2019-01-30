@@ -70,26 +70,42 @@ class GameInstance:
             self.player.xaccel = 0
         if self.player.k_up:
             if self.player.yaccel <= 8:
-                self.player.posy -= 1
-                self.player.yaccel += 1
+                if self.player.xaccel > 4:
+                    self.player.posy -= 2
+                    self.player.yaccel += 1
+                else:
+                    self.player.posy -= 1
+                    self.player.yaccel += 1
             else:
                 self.player.posy -= 3
         elif self.player.k_down:
             if self.player.yaccel <= 8:
-                self.player.posy += 1
-                self.player.yaccel += 1
+                if self.player.yaccel > 4:
+                    self.player.posy += 2
+                    self.player.yaccel += 1
+                else:
+                    self.player.posy += 1
+                    self.player.yaccel += 1
             else:
                 self.player.posy += 3
         if self.player.k_left:
             if self.player.xaccel <= 8:
-                self.player.posx += 1
-                self.player.xaccel += 1
+                if self.player.xaccel > 4:
+                    self.player.posx += 2
+                    self.player.xaccel += 1
+                else:
+                    self.player.posx += 1
+                    self.player.xaccel += 1
             else:
                 self.player.posx += 3
         if self.player.k_right:
             if self.player.xaccel <= 8:
-                self.player.posx -= 1
-                self.player.xaccel += 1
+                if self.player.xaccel > 4:
+                    self.player.posx -= 2
+                    self.player.xaccel += 1
+                else:
+                    self.player.posx -= 2
+                    self.player.xaccel += 1
             else:
                 self.player.posx -= 3
         if self.player.k_lctrl:
