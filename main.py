@@ -16,21 +16,18 @@ class Weapon:
 
 
 class Projectile:
-    def __init__(self, player, bullettype, speed, rate, posx, posy, rise, run):
+    def __init__(self, player, bullettype, speed, posx, posy, xstart, xend, ystart, yend):
         self.player = player
-        self.speed = speed
         self.type = bullettype
-        self.rate = rate
         self.posx = posx
         self.posy = posy
-        self.rise = rise
-        self.run = run
+        self.trajectory = get_bullet_traj(xstart, xend, ystart, yend, speed)
 
 
 class GroundSpace:
     def __init__(self, name, imagefile, buildings=None):
         self.name = name
-        self.image = Image.load(os.path.join("images",imagefile))
+        self.image = Image.load(os.path.join("images", imagefile))
         self.buildings = buildings
         ground_spaces[name] = self
 
@@ -74,6 +71,14 @@ class GameInstance:
             self.player.mg_wait -= 1
         else:
             self.player.mg_wait = weapons["minigun"].rate
+            bullets.append(Projectile(True, "minigun", 6, self.player.posx+28,
+                                      self.player.posy+20, self.player.posx+25,
+                                      self.player.posx+25, self.player.posy+20,
+                                      self.player.posy+21))
+            bullets.append(Projectile(True, "minigun", 6, self.player.posx-28,
+                                      self.player.posy+20, self.player.posx+25,
+                                      self.player.posx+25, self.player.posy+20,
+                                      self.player.posy+21))
 
     def loop(self):
         self.clock = pygame.time.Clock()
@@ -148,14 +153,21 @@ def LoadGround():
         ground_spaces[item] = GroundSpace(item, "%s.png" % item)
 
 
+def get_bullet_traj(xstart,xend, ystart, yend, speed):
+    distance = [xend - xstart, yend - ystart]
+    norm = math.sqrt(distance[0] ** 2 + distance[1] ** 2)
+    direction = [distance[0] / norm, distance[1] / norm]
+    return([direction[0]*speed, direction[1]*speed])
+
+
 ground_tiles = ["grass1", "grass2", "grass3"]
 ground_buildings = []
 ground_spaces = {}
 ship_image = Image.load(os.path.join("images", "ship.png"))
 bullet_types = {"minigun":1}
 weapon_dict = {"minigun": Weapon(6, 8, "minigun")}
+bullets = []
 
 instance = GameInstance()
 while True:
     instance.loop()
-pygame.quit()
