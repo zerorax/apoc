@@ -35,10 +35,12 @@ class GroundSpace:
 
 
 class Enemy:
-    def __init__(self, shiptype, posx, posy):
+    def __init__(self, shiptype, posx, posy, hp):
         self.shiptype = shiptype
         self.posx = posx
         self.posy = posy
+        self.hp = hp
+        self.cooldown = 0
 
 
 class GameInstance:
